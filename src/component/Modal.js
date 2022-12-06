@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react'
 
 const Modal = (props) => {
-    const {activeProps } = props;
-    const [formdata ,setFormData] = useState({
-        email : '',
-        password : ''
+    const {activeProps, ResponseData} = props;
+    const [formdata, setFormData] = useState({
+        email : ResponseData[0].email, 
+        password : ResponseData[0].password
     })
-    // console.log("modal data" , popupData)
-    var popupData = localStorage.getItem("items")        
-    console.log("popupDatapopupData" , popupData)
 
     const ValueChange = (e) => {
         setFormData({...formdata , [e.target.name] : e.target.value})
     }
-    
+    const DataSaved = (e) => {
+        e.preventDefault();
+        let localData = localStorage.getItem('items')
+        console.log("localData ", localData);
+
+    }
     return (
         <>
             <div className={`modal ${activeProps === true ? "popupactive" : "popupdeactive" }`} >
@@ -26,7 +28,8 @@ const Modal = (props) => {
                             </button>
                         </div>
                         <div className="modal-body">
-                            <form>
+                            <form onSubmit={(e) => DataSaved(e)}>
+                          
                                 <div className="mb-3">
                                     <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
                                     <input
@@ -55,7 +58,7 @@ const Modal = (props) => {
                                     />
                                 </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-primary">Save changes</button>
+                            <button type="submit" className="btn btn-primary">Save changes</button>
                             
                         </div>
                         </form>

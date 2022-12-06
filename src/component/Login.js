@@ -4,39 +4,18 @@ import axios from "axios";
 import Modal from '../component/Modal';
 
 const Login = () => {
-  const [activePopup ,setActicePopup] =useState(false)
-  // useEffect(() => {
-  //   const chart = createChart(document.body, { width: 400, height: 300 });
-  //   const lineSeries = chart.addLineSeries();
-  // lineSeries.setData([
-  //     { time: '2019-04-11', value: 80.01 },
-  //     { time: '2019-04-12', value: 96.63 },
-  //     { time: '2019-04-13', value: 76.64 },
-  //     { time: '2019-04-14', value: 81.89 },
-  //     { time: '2019-04-15', value: 74.43 },
-  //     { time: '2019-04-16', value: 80.01 },
-  //     { time: '2019-04-17', value: 96.63 },
-  //     { time: '2019-04-18', value: 76.64 },
-  //     { time: '2019-04-19', value: 81.89 },
-  //     { time: '2019-04-20', value: 74.43 },
-  // ]);
-  // }, [])
-  const [formValue , setformValue] = useState({
-    email : '',
-    password : ''
-  })
+    const [activePopup ,setActicePopup] =useState(false);
+    const [filterData , setfilterData] = useState([]);
+    const [res, setResponse] = useState([])
+    const [formValue , setformValue] = useState({
+      email : '',
+      password : ''
+    })
+
 
   const Datachange = ((e) => {
     setformValue({...formValue , [e.target.name] : e.target.value})
   }) 
-
-  const [res, setResponse] = useState([])
-  // const [error , SetError ] = useState({
-  //     emailError : '',
-  //     passwordError : ''
-  // }
-
-  // )
 
 
 
@@ -44,15 +23,16 @@ const Login = () => {
   
   const Dataupdated = (e) => {
     e.preventDefault();
-      console.log("this is the form value" , formValue);
+      // console.log("this is the form value" , formValue);
       let LocalData = localStorage.getItem('items');
-      let LocalDataParse = LocalData ? JSON.parse(LocalData) : [];
-      let newData = LocalDataParse;
-      newData.push(formValue);
-      console.log("123",newData);
+      let newData = LocalData ? JSON.parse(LocalData) : [];
+      
+      newData?.push(formValue);
+      // console.log("123",newData);
       localStorage.setItem('items' ,JSON.stringify(newData));
-      setResponse(newData)
+      setResponse(newData);
   }
+
 
   // delte function
   const Deletetd = (selectedIndex) => { 
@@ -65,12 +45,14 @@ const Login = () => {
   }
 
   const EditTable = (selectIndex) => {
-    alert(selectIndex);
     let data = res.filter((val , index) => index === selectIndex) 
-    if(data){
-      setActicePopup(true)
-    }
+    console.log('this is the data' , data)
+    setfilterData(data)
 
+    if(filterData){
+      setActicePopup(true)
+      
+    }
   }
   
   return (
@@ -120,7 +102,7 @@ const Login = () => {
       </tr>
 
         {
-          res.map((res, index) => (
+          res?.map((res, index) => (
               <tr key= {index}>
                 <td>{index})</td>
                 <td >
@@ -131,15 +113,22 @@ const Login = () => {
                 </td>
                 <td><button onClick={() => EditTable(index)}>Edit</button></td>
                 <td><button onClick={() => Deletetd(index)}>Delete</button></td>
-
               </tr>
           ))
         }
       
     </table>
-    <Modal
-        activeProps  = {activePopup}  
-    />
+    
+       
+          { activePopup ?
+          <Modal
+              activeProps  = {activePopup}  
+              ResponseData = {filterData}
+              
+          /> : null
+          } 
+          
+    
       
     </div>
   )
