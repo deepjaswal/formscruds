@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 const Modal = (props) => {
-    const {activeProps, ResponseData} = props;
+    const {activeProps, ResponseData, updateFunction} = props;
     const [formdata, setFormData] = useState({
         email : ResponseData[0].email, 
         password : ResponseData[0].password
@@ -12,10 +12,16 @@ const Modal = (props) => {
     }
     const DataSaved = (e) => {
         e.preventDefault();
-        let localData = localStorage.getItem('items')
-        console.log("localData ", localData);
-
+        // let localData = localStorage.getItem('items')
+        // console.log("localData ", localData);
+        let updatedObject = {...formdata, ['id']: props.editIndex }
+        updateFunction([updatedObject])
     }
+
+    // odatefunction
+
+
+
     return (
         <>
             <div className={`modal ${activeProps === true ? "popupactive" : "popupdeactive" }`} >

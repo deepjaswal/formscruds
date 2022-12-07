@@ -7,10 +7,13 @@ const Login = () => {
     const [activePopup ,setActicePopup] =useState(false);
     const [filterData , setfilterData] = useState([]);
     const [res, setResponse] = useState([])
+    const [editIndex , seteditIndex] = useState(0);
     const [formValue , setformValue] = useState({
       email : '',
-      password : ''
+      password : '',
+      
     })
+
 
 
   const Datachange = ((e) => {
@@ -19,18 +22,20 @@ const Login = () => {
 
 
 
+
   // update function
-  
+
+
+
   const Dataupdated = (e) => {
     e.preventDefault();
       // console.log("this is the form value" , formValue);
       let LocalData = localStorage.getItem('items');
       let newData = LocalData ? JSON.parse(LocalData) : [];
-      
       newData?.push(formValue);
       // console.log("123",newData);
       localStorage.setItem('items' ,JSON.stringify(newData));
-      setResponse(newData);
+      setResponse(newData);     
   }
 
 
@@ -43,18 +48,36 @@ const Login = () => {
 
     
   }
-
   const EditTable = (selectIndex) => {
     let data = res.filter((val , index) => index === selectIndex) 
+    
     console.log('this is the data' , data)
     setfilterData(data)
-
     if(filterData){
       setActicePopup(true)
-      
     }
+    seteditIndex(selectIndex)
+  }
+
+
+
+  const updateFunction = (e) => {
+    var modalData = e;
+    console.log('updatedObject', e);
+      var receivedDatas = res.filter((resdata, indexs) => indexs !== modalData.id);
+     localStorage.setItem('items' ,JSON.stringify(modalData));
+     console.log("this receivedDatas" , receivedDatas)
+
+     setResponse(receivedDatas)
+
+
+
+
+
   }
   
+
+
   return (
     <div className='container mt-5'>
       <form onSubmit= {e => Dataupdated(e)} style={{marginBottom : "30px"}}>
@@ -116,7 +139,6 @@ const Login = () => {
               </tr>
           ))
         }
-      
     </table>
     
        
@@ -124,7 +146,8 @@ const Login = () => {
           <Modal
               activeProps  = {activePopup}  
               ResponseData = {filterData}
-              
+              updateFunction = {updateFunction}
+              editIndex={editIndex}
           /> : null
           } 
           
